@@ -1,0 +1,15 @@
+# Jupyter
+**/.ipynb_checkpoints/
+.ipynb_*            # any hidden Jupyter aux files like .ipynb_foo
+
+# Python cache/bytecode
+**/__pycache__/
+*.py[cod]
+*$py.class
+/old/
+/old/*
+models/
+models/*
+export/
+msgs/
+msgs/*
