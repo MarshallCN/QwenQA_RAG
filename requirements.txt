@@ -7,3 +7,4 @@ FlagEmbedding
 sentence-transformers
 langchain-community
 langchain-text-splitters
+pypdf

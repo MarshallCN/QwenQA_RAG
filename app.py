@@ -482,11 +482,12 @@ def on_send(user_text: str,
     else:
         user_text_aug = user_text
 
-    # 4) append user, render prompt, generate
-    messages = messages + [{"role": "user", "content": user_text_aug}]
+    # 4) append user (raw) for UI/persist; use augmented only for model prompt
+    visible_messages = messages + [{"role": "user", "content": user_text}]
+    prompt_messages = messages + [{"role": "user", "content": user_text_aug}]
 
     prompt, max_new = render_qwen_trim(
-        messages=messages,
+        messages=prompt_messages,
         model=model,
         n_ctx=None,
         add_generation_prompt=True,
@@ -520,18 +521,18 @@ def on_send(user_text: str,
             reply = str(_out).strip()
 
     # 5) append assistant + persist
-    messages = messages + [{"role": "assistant", "content": reply}]
+    messages = visible_messages + [{"role": "assistant", "content": reply}]
 
     if msg_id:
         msg_dir = _as_dir(BASE_MSG_DIR, msg_id)
         persist_messages(messages, msg_dir, archive_last_turn=True)
 
-    return "", messages, visible_chat(messages), msg_id, sessions_update, sessions, gr.update(value=rag_context_text, visible=True)
+    return "", messages, visible_chat(messages), msg_id, sessions_update, sessions, gr.update(value=rag_context_text, visible=use_rag)
 
 
 # ===================== UI =====================
-with gr.Blocks(title="Qwen GGUF — Chat + RAG (CPU Space)") as demo:
-    gr.Markdown("## 🧠 Qwen Chat with On‑Space RAG (BGEM3 + FAISS)")
+with gr.Blocks(title="Qwen Chat with RAG (CPU Space)") as demo:
+    gr.Markdown("## 🧠 Qwen Chat with RAG (BGEM3 + FAISS)")
 
     with gr.Row():
         with gr.Column(scale=3):
@@ -567,6 +568,24 @@ with gr.Blocks(title="Qwen GGUF — Chat + RAG (CPU Space)") as demo:
     messages = gr.State([])
     msg_id = gr.State("")
     sessions = gr.State([])
+    # Toggle visibility of RAG UI when checkbox changes
+    def toggle_rag_visibility(use):
+        vis = bool(use)
+        return (
+            gr.update(visible=vis),  # db_selector
+            gr.update(visible=vis),  # top_k
+            gr.update(visible=vis),  # rerank_take
+            gr.update(visible=vis),  # rag_status
+            gr.update(visible=vis),  # file_box
+            gr.update(visible=vis),  # add_btn
+            gr.update(visible=vis),  # rag_ctx
+        )
+
+    use_rag.change(
+        toggle_rag_visibility,
+        inputs=[use_rag],
+        outputs=[db_selector, top_k, rerank_take, rag_status, file_box, add_btn, rag_ctx],
+    )
 
     # Events — RAG DB
     def on_db_change(db_name):
