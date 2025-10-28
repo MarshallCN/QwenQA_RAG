@@ -409,4 +409,4 @@ with gr.Blocks(title="Qwen GGUF — multi-session") as demo:
     demo.load(_init_sessions, None, outputs=[session_list, sessions, msg_id, messages, chat])
 
 if __name__ == "__main__":
-    demo.queue().launch()
+    demo.launch()
