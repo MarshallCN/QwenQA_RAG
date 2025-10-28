@@ -2,3 +2,8 @@ gradio==5.49.1
 huggingface_hub>=0.23
 orjson
 llama-cpp-python==0.2.90
+faiss-cpu
+FlagEmbedding
+sentence-transformers
+langchain-community
+langchain-text-splitters
