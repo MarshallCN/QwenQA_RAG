@@ -543,13 +543,13 @@ with gr.Blocks(title="Qwen Chat with RAG (CPU Space)") as demo:
                 repetition_penalty = gr.Slider(1.0, 2.0, value=1.07, step=0.01, label="repetition_penalty")
             with gr.Accordion("RAG settings", open=True):
                 use_rag = gr.Checkbox(value=False, label="Use RAG for replies")
-                db_selector = gr.Dropdown(label="Vector DB", choices=list_vector_dbs(), value="<New Vector DB>")
-                top_k = gr.Slider(1, 20, value=DEFAULT_TOPK, step=1, label="Retrieve top‑k")
-                rerank_take = gr.Slider(1, 10, value=DEFAULT_RERANK_TAKE, step=1, label="Rerank keep (Top‑N)")
+                db_selector = gr.Dropdown(label="Vector DB", choices=list_vector_dbs(), value="<New Vector DB>", visible=False)
+                top_k = gr.Slider(1, 20, value=DEFAULT_TOPK, step=1, label="Retrieve top‑k", visible=False)
+                rerank_take = gr.Slider(1, 10, value=DEFAULT_RERANK_TAKE, step=1, label="Rerank keep (Top‑N)", visible=False)
                 rag_status = gr.Textbox(label="RAG status / DB stats", interactive=False)
                 with gr.Row():
-                    file_box = gr.File(label="Upload documents (PDF/TXT)", file_types=[".pdf", ".txt"], file_count="multiple")
-                add_btn = gr.Button("📚 Add to Vector DB")
+                    file_box = gr.File(label="Upload documents (PDF/TXT)", file_types=[".pdf", ".txt"], file_count="multiple", visible=False) 
+                add_btn = gr.Button("📚 Add to Vector DB", visible=False)
 
             session_list = gr.Radio(choices=[], value=None, label="Conversations", interactive=True)
             new_btn = gr.Button("New chat", variant="secondary")
