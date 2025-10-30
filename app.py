@@ -43,9 +43,8 @@ from utils import mk_msg_dir, _as_dir, persist_messages
 
 # ===================== Paths & Constants =====================
 assistant_name = "Nova"
-user_name = "Marshall"
 persona = (
-    f"Your name is {assistant_name}. Address the user as \"{user_name}\". Use Markdown; "
+    f"Your name is {assistant_name}. Use Markdown; "
     f"put code in fenced blocks with a language tag."
 ).strip()
 
@@ -542,8 +541,8 @@ with gr.Blocks(title="Qwen Chat with RAG (CPU Space)") as demo:
                 top_p = gr.Slider(0.1, 1.0, value=0.95, step=0.01, label="top_p")
                 max_new_tokens = gr.Slider(16, 512, value=256, step=16, label="max_new_tokens")
                 repetition_penalty = gr.Slider(1.0, 2.0, value=1.07, step=0.01, label="repetition_penalty")
-            with gr.Accordion("RAG settings", open=False):
-                use_rag = gr.Checkbox(value=True, label="Use RAG for replies")
+            with gr.Accordion("RAG settings", open=True):
+                use_rag = gr.Checkbox(value=False, label="Use RAG for replies")
                 db_selector = gr.Dropdown(label="Vector DB", choices=list_vector_dbs(), value="<New Vector DB>")
                 top_k = gr.Slider(1, 20, value=DEFAULT_TOPK, step=1, label="Retrieve top‑k")
                 rerank_take = gr.Slider(1, 10, value=DEFAULT_RERANK_TAKE, step=1, label="Rerank keep (Top‑N)")
@@ -553,14 +552,14 @@ with gr.Blocks(title="Qwen Chat with RAG (CPU Space)") as demo:
                 add_btn = gr.Button("📚 Add to Vector DB")
 
             session_list = gr.Radio(choices=[], value=None, label="Conversations", interactive=True)
-            new_btn = gr.Button("New session", variant="secondary")
-            del_btn = gr.Button("Delete session", variant="stop")
+            new_btn = gr.Button("New chat", variant="secondary")
+            del_btn = gr.Button("Delete chat", variant="stop")
             dl_btn = gr.Button("Download JSON", variant="secondary")
             dl_file = gr.File(label="", interactive=False, visible=False)
 
         with gr.Column(scale=9):
             chat = gr.Chatbot(label="Chat", height=560, render_markdown=True, type="messages")
-            rag_ctx = gr.Textbox(label="📄 RAG context (Top‑N)", lines=8, interactive=False, show_copy_button=True)
+            rag_ctx = gr.Textbox(label="📄 RAG context (Top‑N)", lines=8, interactive=False, show_copy_button=True, visible=False)
             user_box = gr.Textbox(label="Your message", placeholder="Type and press Enter…", autofocus=True)
             send = gr.Button("Send", variant="primary")
 
